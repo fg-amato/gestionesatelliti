@@ -1,5 +1,6 @@
 package it.prova.gestionesatelliti.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -140,6 +141,13 @@ public class SatelliteServiceImpl implements SatelliteService {
 	@Transactional(readOnly = true)
 	public List<Satellite> findAllDisattivatiMaNonRientrati() {
 		return repository.findByStatoAndDataRientroNull(StatoSatellite.DISATTIVATO);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Satellite> findAllFissiPerAlmenoDieciAnni() {
+		LocalDate data = LocalDate.now().minusYears(10).minusDays(1);
+		return repository.findByStatoAndDataLancioLessThanEqual(StatoSatellite.FISSO, java.sql.Date.valueOf(data));
 	}
 
 }

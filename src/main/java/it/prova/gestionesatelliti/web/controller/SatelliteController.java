@@ -52,8 +52,15 @@ public class SatelliteController {
 	}
 
 	@GetMapping("/listDisattivatiMaInOrbita")
-	public String listDisattivatiMaInOrbita(Satellite example, ModelMap model) {
+	public String listDisattivatiMaInOrbita(ModelMap model) {
 		List<Satellite> results = satelliteService.findAllDisattivatiMaNonRientrati();
+		model.addAttribute("satellite_list_attribute", results);
+		return "satellite/list";
+	}
+	
+	@GetMapping("/listFissiDaDieciAnni")
+	public String listFissiDaDieciAnni(ModelMap model) {
+		List<Satellite> results = satelliteService.findAllFissiPerAlmenoDieciAnni();
 		model.addAttribute("satellite_list_attribute", results);
 		return "satellite/list";
 	}
