@@ -150,4 +150,10 @@ public class SatelliteServiceImpl implements SatelliteService {
 		return repository.findByStatoAndDataLancioLessThanEqual(StatoSatellite.FISSO, java.sql.Date.valueOf(data));
 	}
 
+	@Override
+	public List<Satellite> findAllLanciatiDaAlmenoDueAnni() {
+		LocalDate data = LocalDate.now().minusYears(2).minusDays(1);
+		return repository.findByDataLancioLessThanEqual(java.sql.Date.valueOf(data));
+	}
+
 }

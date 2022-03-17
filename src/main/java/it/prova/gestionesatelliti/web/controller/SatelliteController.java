@@ -64,6 +64,13 @@ public class SatelliteController {
 		model.addAttribute("satellite_list_attribute", results);
 		return "satellite/list";
 	}
+	
+	@GetMapping("/listLanciatiDaDueAnni")
+	public String listLanciatiDaDueAnni(ModelMap model) {
+		List<Satellite> results = satelliteService.findAllLanciatiDaAlmenoDueAnni();
+		model.addAttribute("satellite_list_attribute", results);
+		return "satellite/list";
+	}
 
 	@GetMapping("/insert")
 	public String create(Model model) {

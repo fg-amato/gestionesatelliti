@@ -14,4 +14,6 @@ public interface SatelliteRepository extends CrudRepository<Satellite, Long>, Jp
 	public List<Satellite> findByStatoAndDataRientroNull(StatoSatellite input);
 
 	public List<Satellite> findByStatoAndDataLancioLessThanEqual(StatoSatellite input, Date data);
+	
+	public List<Satellite> findByDataLancioLessThanEqual(Date data);
 }
