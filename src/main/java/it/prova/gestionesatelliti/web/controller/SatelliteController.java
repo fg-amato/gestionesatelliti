@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import it.prova.gestionesatelliti.exceptions.IllegalSatelliteStateException;
 import it.prova.gestionesatelliti.model.Satellite;
 import it.prova.gestionesatelliti.service.SatelliteService;
 
@@ -83,7 +84,15 @@ public class SatelliteController {
 
 	@PostMapping("/remove")
 	public String remove(@RequestParam(required = true) Long idSatellite, RedirectAttributes redirectAttrs) {
-		satelliteService.rimuoviById(idSatellite);
+
+		try {
+			Satellite toRemove = satelliteService.caricaSingoloElemento(idSatellite);
+			satelliteService.rimuovi(toRemove);
+		} catch (IllegalSatelliteStateException e) {
+			redirectAttrs.addFlashAttribute("errorMessage", "Impossibile eliminare il satellite!");
+			redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
+			return "redirect:/satellite";
+		}
 
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
 		return "redirect:/satellite";
