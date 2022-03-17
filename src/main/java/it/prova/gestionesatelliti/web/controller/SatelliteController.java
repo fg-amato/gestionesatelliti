@@ -11,8 +11,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -34,13 +36,12 @@ public class SatelliteController {
 		mv.setViewName("satellite/list");
 		return mv;
 	}
-	
-	
+
 	@GetMapping("/search")
 	public String search() {
 		return "satellite/search";
 	}
-	
+
 	@PostMapping("/list")
 	public String listByExample(Satellite example, ModelMap model) {
 		List<Satellite> results = satelliteService.findByExample(example);
@@ -53,23 +54,44 @@ public class SatelliteController {
 		model.addAttribute("insert_satellite_attr", new Satellite());
 		return "satellite/insert";
 	}
-	
+
 	@PostMapping("/save")
-	 public String save(@Valid @ModelAttribute("insert_satellite_attr") Satellite satellite, BindingResult result,
-	   RedirectAttributes redirectAttrs) {
+	public String save(@Valid @ModelAttribute("insert_satellite_attr") Satellite satellite, BindingResult result,
+			RedirectAttributes redirectAttrs) {
 
-	  if (satellite.getDataLancio() != null && satellite.getDataRientro() != null
-	    && satellite.getDataLancio().after(satellite.getDataRientro())) {
-	   result.rejectValue("dataLancio", "dataLancio.dataRientro.rangeInvalid");
-	   result.rejectValue("dataRientro", "dataLancio.dataRientro.rangeInvalid");
-	  }
+		if (satellite.getDataLancio() != null && satellite.getDataRientro() != null
+				&& satellite.getDataLancio().after(satellite.getDataRientro())) {
+			result.rejectValue("dataLancio", "dataLancio.dataRientro.rangeInvalid");
+			result.rejectValue("dataRientro", "dataLancio.dataRientro.rangeInvalid");
+		}
 
-	  if (result.hasErrors())
-	   return "satellite/insert";
+		if (result.hasErrors())
+			return "satellite/insert";
 
-	  satelliteService.inserisciNuovo(satellite);
+		satelliteService.inserisciNuovo(satellite);
 
-	  redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
-	  return "redirect:/satellite";
-	 }
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/satellite";
+	}
+
+	@GetMapping("/delete/{idSatellite}")
+	public String delete(@PathVariable(required = true) Long idSatellite, Model model) {
+		Satellite toDelete = satelliteService.caricaSingoloElemento(idSatellite);
+		model.addAttribute("delete_satellite_attr", toDelete);
+		return "satellite/delete";
+	}
+
+	@PostMapping("/remove")
+	public String remove(@RequestParam(required = true) Long idSatellite, RedirectAttributes redirectAttrs) {
+		satelliteService.rimuoviById(idSatellite);
+
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/satellite";
+	}
+
+	@GetMapping("/show/{idSatellite}")
+	public String show(@PathVariable(required = true) Long idSatellite, Model model) {
+		model.addAttribute("show_satellite_attr", satelliteService.caricaSingoloElemento(idSatellite));
+		return "satellite/show";
+	}
 }
