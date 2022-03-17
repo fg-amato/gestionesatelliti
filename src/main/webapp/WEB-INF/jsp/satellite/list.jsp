@@ -55,6 +55,7 @@
 				                        <th>Codice</th>
 				                        <th>Stato</th>
 				                        <th>Azioni</th>
+				                        <th></th>
 				                    </tr>
 				                </thead>
 				                <tbody>
@@ -64,15 +65,23 @@
 											<td>${satelliteItem.codice }</td>
 											<td>${satelliteItem.stato }</td>
 											<td>
-												<c:if test = "${satelliteItem.dataLancio != null && satelliteItem.dataRientro == null}">
-													<a class="btn  btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/satellite/show/${satelliteItem.id }">Rientra</a>
-												</c:if>
-												<c:if test = "${satelliteItem.dataLancio == null && satelliteItem.dataRientro == null}">
-													<a class="btn  btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/satellite/show/${satelliteItem.id }">Lancia</a>
-												</c:if>
 												<a class="btn  btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/satellite/show/${satelliteItem.id }">Visualizza</a>
 												<a class="btn  btn-sm btn-outline-primary ml-2 mr-2" href="${pageContext.request.contextPath}/satellite/edit/${satelliteItem.id }">Edit</a>
 												<a class="btn btn-outline-danger btn-sm" href="${pageContext.request.contextPath}/satellite/delete/${satelliteItem.id }">Delete</a>
+											</td>
+											<td>
+												<c:if test = "${satelliteItem.dataLancio != null && satelliteItem.dataRientro == null}">
+													<form method="post" action="${pageContext.request.contextPath }/impiegato/rientra" class="row g-3" novalidate="novalidate">
+														<button type="submit" name="submit" value="submit" id="submit" class="btn btn-outline-warning btn-sm">Rientra</button>
+														<input type ="hidden" name = "idSatellite" value = "${satelliteItem.id}"/>
+													</form>
+												</c:if>
+												<c:if test = "${satelliteItem.dataLancio == null && satelliteItem.dataRientro == null}">
+													<form method="post" action="${pageContext.request.contextPath }/satellite/lancia" class="row g-3" novalidate="novalidate">
+														<button type="submit" name="submit" value="submit" id="submit" class="btn btn-outline-warning btn-sm">Lancia</button>
+														<input type ="hidden" name = "idSatellite" value = "${satelliteItem.id}"/>
+													</form>
+												</c:if>
 											</td>
 										</tr>
 									</c:forEach>

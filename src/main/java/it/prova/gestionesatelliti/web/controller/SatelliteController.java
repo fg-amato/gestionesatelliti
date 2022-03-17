@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import it.prova.gestionesatelliti.exceptions.AlreadyLaunchedSatelliteException;
 import it.prova.gestionesatelliti.exceptions.IllegalSatelliteStateException;
 import it.prova.gestionesatelliti.model.Satellite;
 import it.prova.gestionesatelliti.service.SatelliteService;
@@ -103,7 +104,7 @@ public class SatelliteController {
 		model.addAttribute("show_satellite_attr", satelliteService.caricaSingoloElemento(idSatellite));
 		return "satellite/show";
 	}
-	
+
 	@GetMapping("/edit/{idSatellite}")
 	public String edit(@PathVariable(required = true) Long idSatellite, Model model) {
 		Satellite toUpdate = satelliteService.caricaSingoloElemento(idSatellite);
@@ -114,17 +115,36 @@ public class SatelliteController {
 	@PostMapping("/update")
 	public String update(@Valid @ModelAttribute("update_satellite_attr") Satellite satellite, BindingResult result,
 			RedirectAttributes redirectAttrs) {
-		
+
 		if (satellite.getDataLancio() != null && satellite.getDataRientro() != null
 				&& satellite.getDataLancio().after(satellite.getDataRientro())) {
 			result.rejectValue("dataLancio", "dataLancio.dataRientro.rangeInvalid");
 			result.rejectValue("dataRientro", "dataLancio.dataRientro.rangeInvalid");
 		}
-		
+
 		if (result.hasErrors())
 			return "satellite/edit";
 
 		satelliteService.aggiorna(satellite);
+
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/satellite";
+	}
+
+	@PostMapping("/lancia")
+	public String lancia(@RequestParam(required = true) Long idSatellite, RedirectAttributes redirectAttrs) {
+
+		try {
+			satelliteService.lancia(idSatellite);
+		} catch (AlreadyLaunchedSatelliteException e) {
+			redirectAttrs.addFlashAttribute("errorMessage", "Impossibile eseguire il lancio del satellite!");
+			redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
+			return "redirect:/satellite";
+		} catch (Exception e) {
+			redirectAttrs.addFlashAttribute("errorMessage", "Qualcosa è andato storto!");
+			redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
+			return "redirect:/satellite";
+		}
 
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
 		return "redirect:/satellite";
