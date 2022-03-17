@@ -24,7 +24,7 @@
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/satellite/search">Ricerca Satelliti</a></li>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/satellite/insert">Inserisci Satellite</a></li>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/satellite/#">Lanciati da 2 anni </a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/satellite/#">Disattivati in orbita</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/satellite/listDisattivatiMaInOrbita">Disattivati in orbita</a></li>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/satellite/#">Fissi da 10 anni</a></li>
             </ul> 
           </li>   

@@ -51,6 +51,13 @@ public class SatelliteController {
 		return "satellite/list";
 	}
 
+	@GetMapping("/listDisattivatiMaInOrbita")
+	public String listDisattivatiMaInOrbita(Satellite example, ModelMap model) {
+		List<Satellite> results = satelliteService.findAllDisattivatiMaNonRientrati();
+		model.addAttribute("satellite_list_attribute", results);
+		return "satellite/list";
+	}
+
 	@GetMapping("/insert")
 	public String create(Model model) {
 		model.addAttribute("insert_satellite_attr", new Satellite());
@@ -91,7 +98,7 @@ public class SatelliteController {
 			satelliteService.rimuovi(toRemove);
 		} catch (IllegalSatelliteStateException e) {
 			redirectAttrs.addFlashAttribute("errorMessage", "Impossibile eliminare il satellite!");
-			redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
+			//redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
 			return "redirect:/satellite";
 		}
 
@@ -142,14 +149,14 @@ public class SatelliteController {
 			return "redirect:/satellite";
 		} catch (Exception e) {
 			redirectAttrs.addFlashAttribute("errorMessage", "Qualcosa è andato storto!");
-			redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
+			//redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
 			return "redirect:/satellite";
 		}
 
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
 		return "redirect:/satellite";
 	}
-	
+
 	@PostMapping("/rientra")
 	public String rientra(@RequestParam(required = true) Long idSatellite, RedirectAttributes redirectAttrs) {
 
@@ -161,7 +168,7 @@ public class SatelliteController {
 			return "redirect:/satellite";
 		} catch (Exception e) {
 			redirectAttrs.addFlashAttribute("errorMessage", "Qualcosa è andato storto!");
-			redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
+			//redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
 			return "redirect:/satellite";
 		}
 

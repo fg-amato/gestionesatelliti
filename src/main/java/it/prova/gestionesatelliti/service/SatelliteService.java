@@ -22,4 +22,6 @@ public interface SatelliteService {
 	public void rientra(Long id);
 
 	public List<Satellite> findByExample(Satellite example);
+
+	public List<Satellite> findAllDisattivatiMaNonRientrati();
 }
