@@ -71,7 +71,7 @@
 											</td>
 											<td>
 												<c:if test = "${satelliteItem.dataLancio != null && satelliteItem.dataRientro == null}">
-													<form method="post" action="${pageContext.request.contextPath }/impiegato/rientra" class="row g-3" novalidate="novalidate">
+													<form method="post" action="${pageContext.request.contextPath }/satellite/rientra" class="row g-3" novalidate="novalidate">
 														<button type="submit" name="submit" value="submit" id="submit" class="btn btn-outline-warning btn-sm">Rientra</button>
 														<input type ="hidden" name = "idSatellite" value = "${satelliteItem.id}"/>
 													</form>

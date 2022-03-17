@@ -149,4 +149,23 @@ public class SatelliteController {
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
 		return "redirect:/satellite";
 	}
+	
+	@PostMapping("/rientra")
+	public String rientra(@RequestParam(required = true) Long idSatellite, RedirectAttributes redirectAttrs) {
+
+		try {
+			satelliteService.rientra(idSatellite);
+		} catch (AlreadyLaunchedSatelliteException e) {
+			redirectAttrs.addFlashAttribute("errorMessage", "Impossibile eseguire il rientro del satellite!");
+			redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
+			return "redirect:/satellite";
+		} catch (Exception e) {
+			redirectAttrs.addFlashAttribute("errorMessage", "Qualcosa è andato storto!");
+			redirectAttrs.addFlashAttribute("list_satellite_attr", satelliteService.listAllElements());
+			return "redirect:/satellite";
+		}
+
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/satellite";
+	}
 }
